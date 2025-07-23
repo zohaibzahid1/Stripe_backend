@@ -1,0 +1,22 @@
+type user
+{
+    id: ID!
+    email: String!
+    name: String!
+    avatarUrl: String
+    googleId: String
+    stripeCustomerId: String
+    stripeSubscriptionId: String
+    isSubscribed: Boolean!
+    subscriptionPlan: String
+    subscriptionStatus: String
+    currentPeriodEnd: DateTime
+    hasOneTimePaid: Boolean!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+extend type Query {
+getCurrentUser: User
+getAllUsers: [User!]!
+}

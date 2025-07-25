@@ -10,7 +10,7 @@ import {
 import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import { WebhookService } from './webhook.service';
-import { ConfigService } from '@nestjs/config';
+
 
 @Controller('webhook')
 export class WebhookController {
@@ -18,7 +18,7 @@ export class WebhookController {
 
   constructor(
     private readonly webhookService: WebhookService,
-    private readonly configService: ConfigService,
+  
   ) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: '2025-06-30.basil',

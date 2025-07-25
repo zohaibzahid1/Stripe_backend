@@ -1,9 +1,9 @@
-type user
+type User
 {
     id: ID!
     email: String!
     name: String!
-    avatarUrl: String
+    avatar: String
     googleId: String
     stripeCustomerId: String
     stripeSubscriptionId: String

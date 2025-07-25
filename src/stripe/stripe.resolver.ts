@@ -10,8 +10,14 @@ export class StripeResolver {
   // Mutation to create a one-time payment intent
   @Mutation(() => String)
   @UseGuards(JwtGuard)
-  async createOneTimePaymentIntent(@Context() context : any ): Promise<string> {
-    const userId = context.req.user.userId; // Get user ID from the request context
+  async createOneTimePaymentIntent(@Context() context : any ): Promise<string | null> {
+    const user = context.req.user;
+    
+    if (!user || !user.userId) {
+      return null; // Return null instead of throwing error
+    }
+    
+    const userId = user.userId; // Get user ID from the request context
 
     const amount = Number(process.env.ONE_TIME_PAYMENT_AMOUNT); // Amount to be charged
     const currency = process.env.ONE_TIME_PAYMENT_CURRENCY;// Currency for the payment
@@ -35,7 +41,13 @@ export class StripeResolver {
   @UseGuards(JwtGuard)
   async createSubscription(@Context() context: any, @Args('priceId') priceId: string) 
   {
-    const userId = context.req.user.userId; // Get user ID from the request context
+    const user = context.req.user;
+    
+    if (!user || !user.userId) {
+      return null; // Return null instead of throwing error
+    }
+    
+    const userId = user.userId; // Get user ID from the request context
 
     if (!priceId) {
       throw new Error('Price ID is required to create a subscription');

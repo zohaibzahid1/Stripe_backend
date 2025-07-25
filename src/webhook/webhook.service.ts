@@ -112,9 +112,9 @@ export class WebhookService {
         const userId = subscription.metadata.userId; // Access user ID from metadata
         try {
             this.userService.update(userId, {
-                stripeSubscriptionId: null,
+                stripeSubscriptionId: undefined,
                 isSubscribed: false,
-                subscriptionPlan: null,
+                subscriptionPlan: undefined,
                 subscriptionStatus: 'canceled',
             });
             console.log(`User ${userId} has canceled their subscription.`);

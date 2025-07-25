@@ -2,6 +2,9 @@
 Base GraphQL schema defining root types that will be extended by other schema files.
 """
 
+# Custom scalar for DateTime
+scalar DateTime
+
 type Query {
   # Base query - will be extended by other schema files
   _empty: String

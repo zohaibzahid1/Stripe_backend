@@ -1,6 +1,6 @@
 extend type Mutation {
 # create one time payment intent
-createOneTimePaymentIntent(): String!
+createOneTimePaymentIntent: String!
 # create subscription
 createSubscription(priceId: String!): String!
 }

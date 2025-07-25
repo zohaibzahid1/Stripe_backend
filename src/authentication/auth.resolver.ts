@@ -10,7 +10,20 @@ export class AuthenticationResolver {
   // Will return the Google authentication URL that the frontend will use to redirect the user
   @Query(() => String)
   getGoogleAuthUrl(): string {
-    return this.authenticationService.loginUrl('google');
+    try {
+      console.log('Fetching Google Auth URL');
+      const url = this.authenticationService.loginUrl('google');
+      console.log('Google Auth URL:', url);
+      
+      if (!url) {
+        throw new Error('Failed to get Google authentication URL');
+      }
+      
+      return url;
+    } catch (error) {
+      console.error('Error getting Google auth URL:', error);
+      throw error;
+    }
   }
 
   @Mutation(() => Boolean)

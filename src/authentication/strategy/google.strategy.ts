@@ -39,9 +39,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     userData.email = emails?.[0]?.value || '';
     userData.avatar = photos?.[0]?.value || '';
     userData.googleId = id; // Store Google ID for future reference
-    
+
    const user =  this.userService.findOrCreateOAuthUser(userData); // returning the user object
     
    return user;
+
   }
 }

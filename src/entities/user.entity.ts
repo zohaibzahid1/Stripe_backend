@@ -8,7 +8,7 @@ import {
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column({ unique: true })
@@ -18,7 +18,7 @@ export class User {
   name: string;
 
   @Column({ nullable: true })
-  avatarUrl?: string;
+  avatar?: string;
 
   // 🔐 Google OAuth related
   @Column({ nullable: true })
@@ -29,13 +29,13 @@ export class User {
   stripeCustomerId?: string;
 
   @Column({ nullable: true })
-  stripeSubscriptionId?: string | null;
+  stripeSubscriptionId?: string;
 
   @Column({ default: false })
   isSubscribed: boolean;
 
   @Column({ nullable: true })
-  subscriptionPlan?: string | null ; // e.g., 'pro_monthly', 'promax_yearly'
+  subscriptionPlan?: string; // e.g., 'pro_monthly', 'promax_yearly'
 
   @Column({ nullable: true })
   subscriptionStatus?: string; // e.g., 'active', 'canceled', 'past_due'

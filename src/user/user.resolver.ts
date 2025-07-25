@@ -20,6 +20,13 @@ export class UserResolver {
     async getCurrentUser(@Context() context: any): Promise<User | null> {
         const user = context.req.user; 
         console.log('Current user:', user);
-        return this.userService.findOne(user.userId);
+        
+        if (!user || !user.userId) {
+            return null; // Return null instead of throwing error
+        }
+        
+        
+        const us =  await this.userService.findOne(user.userId);
+        return us;
     }
 }

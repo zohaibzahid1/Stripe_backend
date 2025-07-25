@@ -12,6 +12,8 @@ import { AuthenticationService } from './auth.service';
       // Initiates the Google OAuth2 login flow
       // The actual redirection to Google happens in the guard
     }
+    
+
 
     @Get('google/callback')
     @UseGuards(GoogleAuthGuard)

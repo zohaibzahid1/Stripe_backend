@@ -32,8 +32,9 @@ export class AuthenticationService {
         
         return this.jwtService.sign(payload, {
             secret: process.env.JWT_ACCESS_SECRET,
-            expiresIn: '1m', // Token expiration time
+            expiresIn: '1h', // Token expiration time
         });
     }
+    
 
 }

@@ -52,13 +52,10 @@ export class StripeResolver {
     if (!priceId) {
       throw new Error('Price ID is required to create a subscription');
     }
-
     // Call the service to create a subscription
     const {clientSecret,subscriptionId} = await this.stripeService.createSubscription(userId, priceId);
-
-    return {
-      clientSecret, // Return the client secret for the subscription
-      subscriptionId // Return the subscription ID
-    } 
+    console.log('Subscription created with client secret:', clientSecret, 'and subscription ID:', subscriptionId);
+    return  clientSecret; // Return the client secret for the subscription
+      
   }
 }

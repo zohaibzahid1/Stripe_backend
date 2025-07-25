@@ -88,11 +88,57 @@ export class StripeService {
             const subscription = await this.stripe.subscriptions.create({
                 customer: user.stripeCustomerId,
                 items: [{ price: priceId }],
-                payment_behavior: 'default_incomplete', // Allows for immediate subscription creation
+                payment_behavior: 'default_incomplete',
+                payment_settings: {
+                    payment_method_types: ['card'],
+                    save_default_payment_method: 'on_subscription',
+                },
                 expand: ['latest_invoice.payment_intent'],
-                collection_method: 'charge_automatically', // Automatically charge the customer
+                collection_method: 'charge_automatically',
             });
-            const paymentIntent = (subscription.latest_invoice as any).payment_intent as Stripe.PaymentIntent;            
+
+            // Check if latest_invoice exists
+            if (!subscription.latest_invoice) {
+                throw new Error('Subscription created but no invoice was generated');
+            }
+
+            const invoice = subscription.latest_invoice as Stripe.Invoice;
+
+            // If no payment intent exists on the invoice, create one manually
+            if (!(invoice as any).payment_intent) {
+                
+                // Check if the invoice has an amount due
+                if (invoice.amount_due === 0) {
+                    throw new Error('Cannot create payment intent for zero-amount invoice. Check your Stripe price configuration.');
+                }
+
+                // Create a payment intent manually for this invoice
+                const manualPaymentIntent = await this.stripe.paymentIntents.create({
+                    amount: invoice.amount_due,
+                    currency: invoice.currency,
+                    customer: user.stripeCustomerId,
+                    metadata: {
+                        subscription_id: subscription.id,
+                        invoice_id: invoice.id || '',
+                        userId: userId,
+                    },
+                    automatic_payment_methods: {
+                        enabled: true,
+                    },
+                });
+
+                return {
+                    clientSecret: manualPaymentIntent.client_secret,
+                    subscriptionId: subscription.id,
+                };
+            }
+
+            const paymentIntent = (invoice as any).payment_intent as Stripe.PaymentIntent;
+            
+            if (!paymentIntent.client_secret) {
+                throw new Error('Payment intent created but no client secret was generated');
+            }
+            
            //------------- will be handeled by webhook--------
             // // Update the user with subscription details
             // user.stripeSubscriptionId = subscription.id;
@@ -108,7 +154,7 @@ export class StripeService {
                 subscriptionId: subscription.id,
             };
         } catch (error) {
-            throw new Error(`Failed to create subscription: ${error}`);
+            throw new Error(`Failed to create subscription: ${error instanceof Error ? error.message : error}`);
         }
     }
 
